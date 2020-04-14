@@ -16,7 +16,6 @@ c = 2;
 %Pattern error and Cycle Error
 P = [];
 C = [];
-S = 0;
 
 %training...
 disp('___________________________________________________________')
@@ -98,6 +97,7 @@ d = [1 -1 1 -1 1];
 
 %starting weights, last variable is the bias for activation function
 w = [0.3350;0.1723;-0.2102;0.2528;-0.1133;0.5012];
+T = []
 
 for n=(1:50)
 for a=(1:5)
@@ -105,12 +105,19 @@ for a=(1:5)
    g = d(a);
    
    v = w'*x;
-   z = (2/(1+exp(-v)))-1;
+   z = (1/(1+exp(-v)));
    e = d(a)-z;
-   df = 0.5*(1-z^2);
+   df = exp(v)/(exp(v)+1)^2;
    r = e*df;
    
+   if (n==2)
+       if (a==2)
+        T = [T;z]
+       end
+    end
+   
    w = w + c*r*x;
+   
    
    %Pattern error
     E = (1/2)*(g - z)^2;
@@ -124,6 +131,8 @@ end
     S = 0; %reset Sum
 end
 
+T = [T;z]
+
 fprintf('final weight vector is as follows\n')
 fprintf('W(1) = %5.2f\n', w(1))
 fprintf('W(2) = %5.2f\n', w(2))
@@ -135,7 +144,7 @@ fprintf('W(6) = %5.2f\n\n', w(6))
 for u=1:5
     x = y(u,:)';
     v = w'*x;
-    z = (2/(1+exp(-v)))-1;
+    z = (1/(1+exp(-v)));
     fprintf('x = %5.2f %5.2f %5.2f %5.2f %5.2f || desired  output is %5.2f || Actual output: %5.2f\n', x(1), x(2), x(3), x(4), x(5), d(u), z);
 end
 
