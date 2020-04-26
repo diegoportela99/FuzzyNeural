@@ -40,7 +40,7 @@ S = []; %composition matrix
 
 for a=(1:length(Z))
    for b=(1:length(R))
-       n=[n;Z(a)*R(b, a)];
+       n=[n;Z(a)*R(a, b)];
    end
    
    S = [S;max(n)]; %take max for that row
