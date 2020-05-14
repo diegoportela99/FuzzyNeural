@@ -1,11 +1,15 @@
 %training inputs
 x = [
-    1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1 1 -1 -1;
-    1 1 1 -1 1 -1 -1 -1 1 1 1 -1 1 1 1 -1;
-    1 1 1 -1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1;
-    -1 1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1 1 -1;
-    -1 1 1 1 -1 1 -1 -1 -1 1 1 1 -1 1 1 1;
-    -1 1 1 1 -1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1
+    1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1 1 -1 -1 -1;
+    1 1 1 -1 1 -1 -1 -1 1 1 1 -1 1 1 1 -1 -1;
+    1 1 1 -1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1 -1;
+    -1 1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1 1 -1 -1;
+    -1 1 1 1 -1 1 -1 -1 -1 1 1 1 -1 1 1 1 -1;
+    -1 1 1 1 -1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1;
+];
+
+test_character = [
+    1 1 1 -1 -1 1 1 -1 -1 1 -1 -1 -1 1 1 -1;
 ];
 
 %desired from training
@@ -45,4 +49,40 @@ n = 0.25; %learning constant
 
 %neural network
 
-
+for a = (1:C)
+   for b = (1:6)
+       training_data = x(b,:)';
+       
+       %2 neurons from first layer
+       first_neuron_weight = weight_vector_to_hidden(1,:)';
+       second_neuron_weight = weight_vector_to_hidden(2,:)';
+       
+       %matrix multiplication hidden
+       first_vector = first_neuron_weight'*training_data;
+       second_vector = second_neuron_weight'*training_data;
+       
+       %activation function hidden
+       first_activation = (1/(1+exp(-first_vector)));
+       second_activation = (1/(1+exp(-second_vector)));
+       third_activation = -1; %bias
+       
+       tied_up_activation = [
+           first_activation; second_activation; third_activation;
+       ];
+       
+       %output layer
+       first_output_neuron_weights = weight_vector_to_output(1,:)';
+       second_output_neuron_weights = weight_vector_to_output(2,:)';
+       third_output_neuron_weights = weight_vector_to_output(3,:)';
+       
+       %matrix multiplication output
+       first_output_vector = first_output_neuron_weights'*tied_up_activation;
+       second_output_vector = second_output_neuron_weights'*tied_up_activation;
+       third_output_vector = third_output_neuron_weights'*tied_up_activation;
+       
+       %activation function output
+       first_output_activation = (1/(1+exp(-first_output_vector)));
+       second_output_activation = (1/(1+exp(-second_output_vector)));
+       third_output_activation = (1/(1+exp(-third_output_vector)));
+   end
+end
