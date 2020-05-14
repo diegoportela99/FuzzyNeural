@@ -108,8 +108,8 @@ for a = (1:C)
        
        %back-propagation output layer
        first_function_derivative_output = exp(first_output_vector)/(exp(first_output_vector)+1)^2;
-       second_function_derivative_output = exp(first_output_vector)/(exp(first_output_vector)+1)^2;
-       third_function_derivative_output = exp(first_output_vector)/(exp(first_output_vector)+1)^2;
+       second_function_derivative_output = exp(second_output_vector)/(exp(second_output_vector)+1)^2;
+       third_function_derivative_output = exp(third_output_vector)/(exp(third_output_vector)+1)^2;
        
        %output error signal (g1)
        first_error_signal_output = first_desired_neuron*first_function_derivative_output;
@@ -162,7 +162,7 @@ for a = (1:C)
        
        for p = (1:17)
            m = 2; %error signal for first neuron
-           weight_vector_to_hidden(k,1) = first_neuron_weight(k,1) + n*tied_up_hidden_error_signal(m,1)*training_data(k,1);
+           weight_vector_to_hidden(p,1) = first_neuron_weight(p,1) + n*tied_up_hidden_error_signal(m,1)*training_data(p,1);
        end
        
        %pattern error
@@ -180,8 +180,8 @@ for a = (1:C)
    S = 0; %reset sum
 end
 
-figure(1)
-plot(CE(1:200))
+%figure(1)
+%plot(CE(1:200))
 
 figure(1)
 plot(PE(1:1200))
@@ -192,11 +192,11 @@ testing_data = test_character(1,:)';
 %2 neurons from first layer
 first_neuron_weight_t = weight_vector_to_hidden(1,:)';
 second_neuron_weight_t = weight_vector_to_hidden(2,:)';
-       
+
 %matrix multiplication hidden
 first_vector_t = first_neuron_weight'*testing_data;
 second_vector_t = second_neuron_weight'*testing_data;
-       
+
 %activation function hidden (y)
 first_activation_t = (1/(1+exp(-first_vector_t)));
 second_activation_t = (1/(1+exp(-second_vector_t)));
@@ -205,7 +205,7 @@ third_activation_t = -1; %bias
 tied_up_activation_t = [
     first_activation_t; second_activation_t; third_activation_t;
 ];
-       
+
 %output layer
 first_output_neuron_weights_t = weight_vector_to_output(1,:)';
 second_output_neuron_weights_t = weight_vector_to_output(2,:)';
@@ -214,7 +214,7 @@ third_output_neuron_weights_t = weight_vector_to_output(3,:)';
 tied_up_output_weights_t = [
     first_output_neuron_weights_t; second_output_neuron_weights_t; third_output_neuron_weights_t;
 ];
-       
+
 %matrix multiplication output
 first_output_vector_t = first_output_neuron_weights_t'*tied_up_activation_t;
 second_output_vector_t = second_output_neuron_weights_t'*tied_up_activation_t;
@@ -223,7 +223,7 @@ third_output_vector_t = third_output_neuron_weights_t'*tied_up_activation_t;
 tied_up_output_matrix_t = [
     first_output_vector_t; second_output_vector_t; third_output_vector_t;
 ];
-       
+
 %activation function output
 first_output_activation_t = (1/(1+exp(-first_output_vector_t)))
 second_output_activation_t = (1/(1+exp(-second_output_vector_t)))
