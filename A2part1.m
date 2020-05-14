@@ -102,6 +102,10 @@ for a = (1:C)
        second_desired_neuron = desired(2) - second_output_activation;
        third_desired_neuron = desired(3) - third_output_activation;
        
+       tied_desired_outputs = [
+           first_desired_neuron; second_desired_neuron; third_desired_neuron
+       ];
+       
        %back-propagation output layer
        first_function_derivative_output = exp(first_output_vector)/(exp(first_output_vector)+1)^2;
        second_function_derivative_output = exp(first_output_vector)/(exp(first_output_vector)+1)^2;
@@ -139,29 +143,48 @@ for a = (1:C)
        
        %update weights
        
-       tied_up_output_weights(1,1) = tied_up_output_weights(1,1) + n*tied_up_output_error_signal(1,1)*first_activation;
-       tied_up_output_weights(2,1) = tied_up_output_weights(2,1) + n*tied_up_output_error_signal(1,1)*second_activation;
-       tied_up_output_weights(3,1) = tied_up_output_weights(1,1) + n*tied_up_output_error_signal(1,1)*third_activation;
+       weight_vector_to_output(1,1) = tied_up_output_weights(1,1) + n*tied_up_output_error_signal(1,1)*first_activation;
+       weight_vector_to_output(2,1) = tied_up_output_weights(2,1) + n*tied_up_output_error_signal(1,1)*second_activation;
+       weight_vector_to_output(3,1) = tied_up_output_weights(1,1) + n*tied_up_output_error_signal(1,1)*third_activation;
        
-       tied_up_output_weights(4,1) = tied_up_output_weights(4,1) + n*tied_up_output_error_signal(2,1)*first_activation;
-       tied_up_output_weights(5,1) = tied_up_output_weights(5,1) + n*tied_up_output_error_signal(2,1)*second_activation;
-       tied_up_output_weights(6,1) = tied_up_output_weights(6,1) + n*tied_up_output_error_signal(2,1)*third_activation;
+       weight_vector_to_output(4,1) = tied_up_output_weights(4,1) + n*tied_up_output_error_signal(2,1)*first_activation;
+       weight_vector_to_output(5,1) = tied_up_output_weights(5,1) + n*tied_up_output_error_signal(2,1)*second_activation;
+       weight_vector_to_output(6,1) = tied_up_output_weights(6,1) + n*tied_up_output_error_signal(2,1)*third_activation;
        
-       tied_up_output_weights(7,1) = tied_up_output_weights(7,1) + n*tied_up_output_error_signal(3,1)*first_activation;
-       tied_up_output_weights(8,1) = tied_up_output_weights(8,1) + n*tied_up_output_error_signal(3,1)*second_activation;
-       tied_up_output_weights(9,1) = tied_up_output_weights(9,1) + n*tied_up_output_error_signal(3,1)*third_activation;
+       weight_vector_to_output(7,1) = tied_up_output_weights(7,1) + n*tied_up_output_error_signal(3,1)*first_activation;
+       weight_vector_to_output(8,1) = tied_up_output_weights(8,1) + n*tied_up_output_error_signal(3,1)*second_activation;
+       weight_vector_to_output(9,1) = tied_up_output_weights(9,1) + n*tied_up_output_error_signal(3,1)*third_activation;
        
        for k = (1:17)
            m = 1; %error signal for first neuron
-           first_neuron_weight(k,1) = first_neuron_weight(k,1) + n*tied_up_hidden_error_signal(m,1)*training_data(k,1);
+           weight_vector_to_hidden(k,1) = first_neuron_weight(k,1) + n*tied_up_hidden_error_signal(m,1)*training_data(k,1);
        end
        
        for p = (1:17)
            m = 2; %error signal for first neuron
-           second_neuron_weight(k,1) = first_neuron_weight(k,1) + n*tied_up_hidden_error_signal(m,1)*training_data(k,1);
+           weight_vector_to_hidden(k,1) = first_neuron_weight(k,1) + n*tied_up_hidden_error_signal(m,1)*training_data(k,1);
        end
+       
+       %pattern error
+       E = 0;
+       for q = (1:3)
+           E = E + 0.5*(tied_desired_outputs(q))^2;
+       end
+       PE = [PE; E];
+       
+       S = S + E;
    end
+   
+   %Cycle error
+   CE = [CE; S];
+   S = 0; %reset sum
 end
+
+figure(1)
+plot(CE(1:200))
+
+figure(1)
+plot(PE(1:1200))
 
 %testing trainined model
 testing_data = test_character(1,:)';
