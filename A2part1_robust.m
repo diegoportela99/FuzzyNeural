@@ -2,6 +2,10 @@ clear
 clc
 cycleerr =[];
 
+test_character = [
+    1 1 1 -1 -1 1 1 -1 -1 1 -1 -1 -1 1 1 -1 -1;
+];
+
 x = [
     [1 1 1 -1 -1 1 -1 -1 -1 1 -1 -1 -1 1 -1 -1 -1];
     [1 1 1 -1 1 -1 -1 -1 1 1 1 -1 1 1 1 -1 -1];
@@ -65,3 +69,12 @@ w
 disp('final weights between hidden and input layer')
 wp
 plot(cycleerr)
+
+%test character output
+a = test_character(1,:)';
+
+vp = wp*a;
+y = (1-exp(-vp))./(1+exp(-vp)); % The output of the hidden layer
+dy = 0.5*(1-y.^2); %f'(bar(v))
+v = w*[y; -1];
+z =(1-exp(-v))./(1+exp(-v))
