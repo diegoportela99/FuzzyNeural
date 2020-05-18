@@ -180,11 +180,11 @@ for a = (1:C)
    S = 0; %reset sum
 end
 
-%figure(1)
-%plot(CE(1:200))
-
 figure(1)
-plot(PE(1:1200))
+plot(CE(1:200))
+
+%figure(1)
+%plot(PE(1:1200))
 
 %testing trainined model
 testing_data = test_character(1,:)';
