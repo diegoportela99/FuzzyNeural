@@ -6,34 +6,44 @@ imds = imageDatastore('C:\Users\diego\OneDrive - UTS\UTS\Year 4\Sem 1\Neural Net
 
 layers = [
     imageInputLayer([32 32 3])
-    
-    convolution2dLayer(3,24,'Stride',1,'Padding',1)
+    convolution2dLayer(5,24,'Stride',1,'Padding',2)
+    batchNormalizationLayer
     reluLayer
     maxPooling2dLayer(2,'Stride',2)% the pooling kernel size is 2*2, stride is 2
     
-    convolution2dLayer(3,30,'Stride',1,'Padding',1)
+    
+    convolution2dLayer(5,28,'Stride',1,'Padding',2)
+    batchNormalizationLayer
     reluLayer
     maxPooling2dLayer(2,'Stride',2)
     
-    convolution2dLayer(3,36,'Stride',1,'Padding',1)
+    convolution2dLayer(5,32,'Stride',1,'Padding',2)
+    batchNormalizationLayer
     reluLayer
     maxPooling2dLayer(2,'Stride',2)
     
-    convolution2dLayer(3,36,'Stride',1,'Padding',1)    
+    convolution2dLayer(5,36,'Stride',1,'Padding',2)    
+    batchNormalizationLayer
     reluLayer
     fullyConnectedLayer(10)
     fullyConnectedLayer(2)
     softmaxLayer
+    
     classificationLayer];
  %  'InitialLearnRate',0.001, ...
  %'InitialLearnRate',0.001, 'Momentum',0.4, ...
  options = trainingOptions('adam', ...
-     'InitialLearnRate',0.01, ...
-     'MaxEpochs',30, ...
+     'ExecutionEnvironment','gpu',...
+     'InitialLearnRate',0.001, ...
+     'MaxEpochs',50, ...
+     'minibatch',6, ...
      'ValidationData',imdsValidation, ...
-     'ValidationFrequency',2, ...
+     'ValidationFrequency',10, ...
      'Plots','training-progress');
  net = trainNetwork(imdsTrain,layers,options);
+ net.divideparam.trainRatio = 70/100;    % Training ratio
+ net.divideparam.valRatio = 30/100;  % Validation ratio
+ net.divideparam.testRatio = 30/100; % Testing Ratio
  
  net.Layers  % display all the layers of this structure
     
