@@ -1,10 +1,12 @@
-gpuDevice(1)
-imds = imageDatastore('C:\Users\diego\OneDrive - UTS\UTS\Year 4\Sem 1\Neural Net - fuss logic\A2\dogs_vs_cats', ...
+currentFolder = pwd;
+currentData = append(currentFolder, '\dogs_vs_cats');
+
+imds = imageDatastore(currentData, ...
     'IncludeSubfolders',true, ...
     'LabelSource','foldernames'); % load the images and labels
 
 imds.ReadFcn = @customReadDatastoreImage;
-[imdsTrain,imdsValidation] = splitEachLabel(imds,0.5); %split training and 
+[imdsTrain,imdsValidation] = splitEachLabel(imds,0.7); %split training and 
 %validation datasets
 
 layers = [
@@ -51,9 +53,9 @@ function data = customReadDatastoreImage(filename)
     % code from default function: 
     onState = warning('off', 'backtrace'); 
     c = onCleanup(@() warning(onState)); 
-    reading = imread(filename); % added lines: 
+    data = imread(filename); % added lines: 
     %turn_gray = rgb2gray(reading);
-    data = imsharpen(reading); %sharpen the image
+    %data = imsharpen(reading); %sharpen the image
     data = data(:,:,min(1:3, end)); 
     data = imresize(data,[64 64]);
 end
